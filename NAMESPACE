@@ -1,2 +1,4 @@
-export("coef.linreg", "linreg", "plot.linreg", "pred.linreg", "print.linreg",
-       "resid.linreg", "summary.linreg")
+export("linreg")
+exportClasses(
+    "linreg" 
+)
