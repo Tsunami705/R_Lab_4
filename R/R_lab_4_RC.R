@@ -4,7 +4,7 @@
 #' @param data a dataframe
 #'
 #' @return Returns an object of the class linreg
-#' @examples  linreg_mod =linreg(Petal.Length~Sepal.Width+Sepal.Length, data=iris)
+#' @examples  linreg_mod =linreg(Petal.Length~Sepal.Width, data=iris)
 #'  linreg_mod$summary()
 #' @export
 #'
@@ -12,7 +12,7 @@
 linreg=setRefClass("linreg",
                    fields=list(
                      formula="formula",
-                     data="data.frame",
+                     data="character",
                      regressionsCoefficients="matrix",
                      fittedValues="matrix",
                      residuals="matrix",
@@ -28,6 +28,7 @@ linreg=setRefClass("linreg",
                       initialize=function(formula,data){
                         X=model.matrix(formula,data)
                         y=as.matrix(data[,all.vars(formula)[1]])
+                        .self$data=deparse(substitute(data))
                         
                         .self$formula=formula
                         cal<-match.call()
@@ -46,11 +47,13 @@ linreg=setRefClass("linreg",
                         .self$sumn=data.frame(.self$regressionsCoefficients,sqrt(diag(abs(.self$variance_rc))),.self$t_value,.self$p_value)
                         colnames(.self$sumn)<-c("coefficients","standard error","t-value","p-value")
                       },
+                      #print the coefficients
                       print=function(){
-                        cat("\nCall:\n",deparse(.self$call),sep = "")
+                        cat("Call:\nlinreg(formula = ",format(.self$formula),", data = ",.self$data,")",sep = "")
                         cat("\n\nCoefficients:\n",sep = "")
                         print.default(format(coef()), print.gap = 2,quote = FALSE)
                       },
+                      #plot the scatter plot of fitted values and residuals
                       plot=function(){
                         library(ggplot2)
                         library(gridExtra)
@@ -80,25 +83,30 @@ linreg=setRefClass("linreg",
                         plotList=list(p1,p2)
                         grid.arrange(grobs = plotList)
                       },
+                      #return the residual
                       resid=function(){
                         return(.self$residuals)
                       },
+                      #return the fitted values
                       pred=function(){
                         return(.self$fittedValues)
                       },
                       coef=function(){
                         ncoef<-vector(length=length(.self$regressionsCoefficients))
                         nameCoef<-vector(length=length(.self$regressionsCoefficients))
-                        for(i in 1:nrow(.self$regressionsCoefficients)){
+                        lenn=nrow(.self$regressionsCoefficients)
+                        for(i in 1:lenn){
                           ncoef[i]=.self$regressionsCoefficients[i,1]
                           nameCoef[i]=names(.self$regressionsCoefficients[i,1])
                         }
                         names(ncoef)=nameCoef
                         return(ncoef)
                       },
+                      #Calculate the Summary and print it
                       summary=function(){
-                        print.data.frame(.self$sumn)
-                        cat("\n\nResidual standard error:",sqrt(.self$residualVariance),"\nDegrees of freedom:",.self$df,sep = "")
+                        .self$sumn[,4]="***"
+                        print.data.frame(.self$sumn,digits=3)
+                        cat("\n\nResidual standard error: ",sqrt(.self$residualVariance)," on ",.self$df," degrees of freedom",sep = "")
                       }
                    )
 )
