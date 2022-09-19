@@ -16,7 +16,8 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(lab04)
-
+library(ggplot2)
+library(gridExtra)
 #Create Linreg Class
 
 data("iris")
