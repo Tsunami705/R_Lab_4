@@ -1,0 +1,58 @@
+---
+title: "my-vignette_lab04"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{my-vignette_lab04}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(lab04)
+
+#Create Linreg Class
+
+data("iris")
+linreg_mod <- linreg(Petal.Length~Sepal.Width+Sepal.Length, data=iris)
+```
+
+
+Method
+"There are several methods which can be implemented on linreg class"
+
+```{r}
+##print() print out the coefficients and coefficient names, similar as done by the lm class.
+linreg_mod$print()
+```
+
+```{r}
+##plot() plot two plots using ggplot2.
+linreg_mod$plot()
+```
+
+```{r eval=FALSE}
+##resid() return the vector of residuals
+linreg_mod$resid()
+```
+
+```{r eval=FALSE}
+##pred() return the predicted values
+linreg_mod$pred()
+```
+
+```{r}
+##coef() return the coefficients as a named vector
+linreg_mod$coef()
+```
+
+```{r}
+##summary() present the coefficients with their standard error, t-value and p-value as well as the estimate of ˆσ and the degrees of freedom in the model
+linreg_mod$summary()
+```
