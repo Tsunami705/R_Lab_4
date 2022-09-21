@@ -108,4 +108,4 @@ linreg=setRefClass("linreg",
                    )
 )
 
-
+#1
