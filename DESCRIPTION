@@ -13,6 +13,7 @@ Description: Implements of the linear aggression algorithm
 License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.2.1
+Import: ggplot2, gridExtra
 Suggests: 
     knitr,
     rmarkdown,

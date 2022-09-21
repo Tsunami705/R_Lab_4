@@ -12,7 +12,8 @@
 linreg=setRefClass("linreg",
                    fields=list(
                      formula="formula",
-                     data="character",
+                     data="data.frame",
+                     dataName="character",
                      regressionsCoefficients="matrix",
                      fittedValues="matrix",
                      residuals="matrix",
@@ -28,7 +29,7 @@ linreg=setRefClass("linreg",
                       initialize=function(formula,data){
                         X=model.matrix(formula,data)
                         y=as.matrix(data[,all.vars(formula)[1]])
-                        .self$data=deparse(substitute(data))
+                        .self$dataName=deparse(substitute(data))
                         
                         .self$formula=formula
                         cal<-match.call()
@@ -36,11 +37,9 @@ linreg=setRefClass("linreg",
                         .self$regressionsCoefficients=solve(t(X) %*% X) %*% t(X) %*% y
                         .self$fittedValues=X %*% .self$regressionsCoefficients
                         .self$residuals=y - .self$fittedValues
-                        n=nrow(X)
-                        p=ncol(X)
-                        .self$df=n-p
+                        .self$df=nrow(X)-ncol(X)
                         .self$residualVariance=(t(.self$residuals)%*%.self$residuals)/.self$df
-                        .self$variance_rc=(solve(t(X) %*% X))*.self$residualVariance[1]
+                        .self$variance_rc=.self$residualVariance[1]*(solve(t(X) %*% X))
                         .self$t_value=.self$regressionsCoefficients/sqrt(diag(abs(.self$variance_rc)))
                         .self$p_value=pt(abs(.self$t_value),.self$df,lower.tail=FALSE)
                         .self$call=cal
@@ -49,14 +48,12 @@ linreg=setRefClass("linreg",
                       },
                       #print the coefficients
                       print=function(){
-                        cat("Call:\nlinreg(formula = ",format(.self$formula),", data = ",.self$data,")",sep = "")
+                        cat("Call:\nlinreg(formula = ",format(.self$formula),", data = ",.self$dataName,")",sep = "")
                         cat("\n\nCoefficients:\n",sep = "")
-                        print.default(format(coef()), print.gap = 2,quote = FALSE)
+                        print.default(format(coef()))
                       },
                       #plot the scatter plot of fitted values and residuals
                       plot=function(){
-                        library(ggplot2)
-                        library(gridExtra)
                         theme_set(theme_bw())
                         data1<-as.data.frame(cbind(.self$fittedValues,.self$residuals))
                         colnames(data1)=c("fittedValues","residuals")
