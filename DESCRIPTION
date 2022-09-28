@@ -9,11 +9,11 @@ Authors@R:
     person("Jin", "Yan", email = "jinya425@student.liu.se", 
     role = "aut"))
 Maintainer: Shipeng Liu <tsunami70510954@gmail.com>
-Description: Implements of the linear aggression algorithm
+Description: Implements of the linear aggression algorithm.
 License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.2.1
-Import: ggplot2, gridExtra
+Imports: ggplot2, gridExtra, methods
 Suggests: 
     knitr,
     rmarkdown,
