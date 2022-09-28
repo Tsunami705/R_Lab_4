@@ -6,7 +6,11 @@
 #' @return Returns an object of the class linreg
 #' @examples  linreg_mod =linreg(Petal.Length~Sepal.Width, data=iris)
 #'  linreg_mod$summary()
-#' @export
+#' @import methods
+#' @import ggplot2
+#' @import gridExtra
+#' @export linreg
+#' @export 
 #'
 
 linreg=setRefClass("linreg",
